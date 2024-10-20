@@ -43,8 +43,8 @@ void B0XXInputViewer::SendReport() {
     _report[9] = ASCII_BIT(_inputs.down);
     _report[10] = ASCII_BIT(_inputs.right);
     _report[11] = ASCII_BIT(_inputs.left);
-    _report[12] = ASCII_BIT(_inputs.mod_x);
-    _report[13] = ASCII_BIT(_inputs.mod_y);
+    _report[12] = ASCII_BIT(_inputs.tilt_3);
+    _report[13] = ASCII_BIT(_inputs.mode_old);
     _report[14] = ASCII_BIT(_inputs.c_left);
     _report[15] = ASCII_BIT(_inputs.c_right);
     _report[16] = ASCII_BIT(_inputs.c_up);

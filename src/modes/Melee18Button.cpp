@@ -41,7 +41,7 @@ void Melee18Button::UpdateDigitalOutputs(InputState &inputs, OutputState &output
     outputs.start = inputs.start;
 
     // Activate D-Pad layer by holding Mod X + Mod Y.
-    if (inputs.mod_x && inputs.mod_y) {
+    if (inputs.tilt_3 && inputs.mode_old) {
         outputs.dpadUp = inputs.c_up;
         outputs.dpadDown = inputs.c_down;
         outputs.dpadLeft = inputs.c_left;
@@ -78,7 +78,7 @@ void Melee18Button::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs
         outputs.leftStickY = 128 + (directions.y * 55);
     }
 
-    if (inputs.mod_x) {
+    if (inputs.tilt_3) {
         if (directions.horizontal) {
             outputs.leftStickX = 128 + (directions.x * 53);
         }
@@ -148,7 +148,7 @@ void Melee18Button::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs
         }
     }
 
-    if (inputs.mod_y) {
+    if (inputs.mode_old) {
         if (directions.horizontal) {
             outputs.leftStickX = 128 + (directions.x * 27);
         }
@@ -235,7 +235,7 @@ void Melee18Button::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs
         }
 
         // L + Mod X = midshield
-        if (inputs.mod_x) {
+        if (inputs.tilt_3) {
             outputs.triggerLDigital = false;
             outputs.triggerRAnalog = 94;
 
@@ -245,7 +245,7 @@ void Melee18Button::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs
             }
         }
         // L + Mod Y = lightshield
-        if (inputs.mod_y) {
+        if (inputs.mode_old) {
             outputs.triggerLDigital = false;
             outputs.triggerRAnalog = 49;
 
@@ -266,11 +266,11 @@ void Melee18Button::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs
         }
         if (directions.diagonal) {
             outputs.leftStickX = 128 + (directions.x * 43);
-            if (inputs.mod_x) {
+            if (inputs.tilt_3) {
                 outputs.leftStickX = 128 + (directions.x * 51);
                 outputs.leftStickY = 128 + (directions.y * 30);
             }
-            if (inputs.mod_y) {
+            if (inputs.mode_old) {
                 outputs.leftStickX = 128 + (directions.x * 40);
                 outputs.leftStickY = 128 + (directions.y * 68);
             }
@@ -292,7 +292,7 @@ void Melee18Button::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs
     }
 
     // Shut off C-stick when using D-Pad layer.
-    if ((inputs.mod_x && inputs.mod_y) || inputs.nunchuk_c) {
+    if ((inputs.tilt_3 && inputs.mode_old) || inputs.nunchuk_c) {
         outputs.rightStickX = 128;
         outputs.rightStickY = 128;
     }

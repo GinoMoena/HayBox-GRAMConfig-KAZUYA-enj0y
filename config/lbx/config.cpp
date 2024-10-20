@@ -26,8 +26,8 @@ GpioButtonMapping button_mappings[] = {
     { &InputState::down,        16},
     { &InputState::right,       14},
 
-    { &InputState::mod_x,       3 },
-    { &InputState::mod_y,       0 },
+    { &InputState::tilt_3,       3 },
+    { &InputState::mode_old,       0 },
     { &InputState::nunchuk_c,   2 }, // Dpad Toggle button
 
     { &InputState::start,       A5},
@@ -56,8 +56,8 @@ GpioButtonMapping brook_button_mappings[] = {
   // WARNING: Bind as few of these as you need, since it increases latency
     {&InputState::l,          11},
 
-    { &InputState::mod_x,     3 },
-    { &InputState::mod_y,     0 },
+    { &InputState::tilt_3,     3 },
+    { &InputState::mode_old,     0 },
     { &InputState::nunchuk_c, 2 },
 
     { &InputState::c_left,    4 },
@@ -142,12 +142,12 @@ void setup() {
 void loop() {
     if (brook_mode) {
         bool button_l = digitalRead(brook_button_mappings[0].pin);
-        bool button_mod_x = digitalRead(brook_button_mappings[1].pin);
-        bool button_mod_y = digitalRead(brook_button_mappings[2].pin);
+        bool button_tilt_3 = digitalRead(brook_button_mappings[1].pin);
+        bool button_mode_old = digitalRead(brook_button_mappings[2].pin);
         bool button_cstick_down = digitalRead(brook_button_mappings[6].pin);
         bool button_a = digitalRead(brook_button_mappings[7].pin);
 
-        digitalWrite(brook_up_pin, button_mod_x && button_mod_y && button_cstick_down && button_a);
+        digitalWrite(brook_up_pin, button_tilt_3 && button_mode_old && button_cstick_down && button_a);
         digitalWrite(brook_l_pin, button_l);
         return;
     }

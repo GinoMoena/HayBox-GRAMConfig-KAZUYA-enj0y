@@ -32,7 +32,7 @@ SwitchMatrixElement matrix[num_rows][num_cols] = {
     { BTN(l), BTN(left), BTN(down),  BTN(right), NA, NA,          NA,         NA,        NA, BTN(b),      BTN(x),    BTN(z),           BTN(up)       },
     { NA,     NA,        NA,         NA,         NA, NA,          NA,         NA,        NA, NA,          NA,        NA,               NA            },
     { NA,     NA,        NA,         NA,         NA, NA,          NA,         NA,        NA, BTN(c_left), BTN(c_up), BTN(c_right),     NA            },
-    { NA,     NA,        BTN(mod_x), BTN(mod_y), NA, NA,          NA,         NA,        NA, BTN(c_down), BTN(a),    NA,               NA            },
+    { NA,     NA,        BTN(tilt_3), BTN(mode_old), NA, NA,          NA,         NA,        NA, BTN(c_down), BTN(a),    NA,               NA            },
 };
 // clang-format on
 DiodeDirection diode_direction = DiodeDirection::COL2ROW;

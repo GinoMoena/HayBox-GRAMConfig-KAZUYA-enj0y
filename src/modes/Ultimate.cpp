@@ -12,6 +12,7 @@ Ultimate::Ultimate(socd::SocdType socd_type) {
         socd::SocdPair{ &InputState::down,   &InputState::up,      socd_type},
         socd::SocdPair{ &InputState::c_left, &InputState::c_right, socd_type},
         socd::SocdPair{ &InputState::c_down, &InputState::c_up,    socd_type},
+        // socd::SocdPair{ &InputState::mode_old, &InputState::tilt_3, socd_type}
     };
 }
 
@@ -29,7 +30,7 @@ void Ultimate::UpdateDigitalOutputs(InputState &inputs, OutputState &outputs) {
     outputs.home = inputs.home;
 
     // Turn on D-Pad layer by holding Mod X + Mod Y or Nunchuk C button.
-    if ((inputs.mod_x && inputs.mod_y) || inputs.nunchuk_c) {
+    if ((inputs.tilt_3 && inputs.mode_old) || inputs.nunchuk_c) {
         outputs.dpadUp = inputs.c_up;
         outputs.dpadDown = inputs.c_down;
         outputs.dpadLeft = inputs.c_left;
@@ -56,198 +57,329 @@ void Ultimate::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs) {
 
     bool shield_button_pressed = inputs.l || inputs.r;
 
-    if (inputs.mod_x) {
-        // MX + Horizontal = 6625 = 53
+
+    if (inputs.tilt_2) {
         if (directions.horizontal) {
-            outputs.leftStickX = 128 + (directions.x * 53);
-            // Horizontal Shield tilt = 51
-            if (shield_button_pressed) {
-                outputs.leftStickX = 128 + (directions.x * 51);
-            }
-            // Horizontal Tilts = 36
-            if (inputs.a) {
-                outputs.leftStickX = 128 + (directions.x * 36);
-            }
+            outputs.leftStickX = ANALOG_STICK_NEUTRAL + (directions.x * 45);
         }
-        // MX + Vertical = 44
+
         if (directions.vertical) {
-            outputs.leftStickY = 128 + (directions.y * 44);
-            // Vertical Shield Tilt = 51
-            if (shield_button_pressed) {
-                outputs.leftStickY = 128 + (directions.y * 51);
-            }
-        }
-        if (directions.diagonal) {
-            // MX + q1/2/3/4 = 53 35
-            outputs.leftStickX = 128 + (directions.x * 53);
-            outputs.leftStickY = 128 + (directions.y * 35);
-            if (shield_button_pressed) {
-                // MX + L, R, LS, and MS + q1/2/3/4 = 6375 3750 = 51 30
-                outputs.leftStickX = 128 + (directions.x * 51);
-                outputs.leftStickY = 128 + (directions.y * 30);
-            }
-        }
-
-        // Angled fsmash/ftilt with C-Stick + MX
-        if (directions.cx != 0) {
-            outputs.rightStickX = 128 + (directions.cx * 127);
-            outputs.rightStickY = 128 + (directions.y * 59);
-        }
-
-        /* Up B angles */
-        if (directions.diagonal && !shield_button_pressed) {
-            // (33.44) = 53 35
-            outputs.leftStickX = 128 + (directions.x * 53);
-            outputs.leftStickY = 128 + (directions.y * 35);
-            // (39.05) = 53 43
-            if (inputs.c_down) {
-                outputs.leftStickX = 128 + (directions.x * 53);
-                outputs.leftStickY = 128 + (directions.y * 43);
-            }
-            // (36.35) = 53 39
-            if (inputs.c_left) {
-                outputs.leftStickX = 128 + (directions.x * 53);
-                outputs.leftStickY = 128 + (directions.y * 39);
-            }
-            // (30.32) = 56 41
-            if (inputs.c_up) {
-                outputs.leftStickX = 128 + (directions.x * 53);
-                outputs.leftStickY = 128 + (directions.y * 31);
-            }
-            // (27.85) = 49 42
-            if (inputs.c_right) {
-                outputs.leftStickX = 128 + (directions.x * 53);
-                outputs.leftStickY = 128 + (directions.y * 28);
-            }
-
-            /* Extended Up B Angles */
-            if (inputs.b) {
-                // (33.29) = 67 44
-                outputs.leftStickX = 128 + (directions.x * 67);
-                outputs.leftStickY = 128 + (directions.y * 44);
-                // (39.38) = 67 55
-                if (inputs.c_down) {
-                    outputs.leftStickX = 128 + (directions.x * 67);
-                    outputs.leftStickY = 128 + (directions.y * 55);
-                }
-                // (36.18) = 67 49
-                if (inputs.c_left) {
-                    outputs.leftStickX = 128 + (directions.x * 67);
-                    outputs.leftStickY = 128 + (directions.y * 49);
-                }
-                // (30.2) = 67 39
-                if (inputs.c_up) {
-                    outputs.leftStickX = 128 + (directions.x * 67);
-                    outputs.leftStickY = 128 + (directions.y * 39);
-                }
-                // (27.58) = 67 35
-                if (inputs.c_right) {
-                    outputs.leftStickX = 128 + (directions.x * 67);
-                    outputs.leftStickY = 128 + (directions.y * 35);
-                }
-            }
-
-            // Angled Ftilts
-            if (inputs.a) {
-                outputs.leftStickX = 128 + (directions.x * 36);
-                outputs.leftStickY = 128 + (directions.y * 26);
-            }
+            outputs.leftStickY = ANALOG_STICK_NEUTRAL + (directions.y * 45);
         }
     }
 
-    if (inputs.mod_y) {
-        // MY + Horizontal (even if shield is held) = 41
+    if (inputs.tilt_3) {
+        // 26 minimo para darse vuelta
         if (directions.horizontal) {
-            outputs.leftStickX = 128 + (directions.x * 41);
-            // MY Horizontal Tilts
-            if (inputs.a) {
-                outputs.leftStickX = 128 + (directions.x * 36);
+            outputs.leftStickX = ANALOG_STICK_NEUTRAL + (directions.x * 25);
+            if (directions.x < 0) {
+                outputs.leftStickX ++;
             }
-        }
-        // MY + Vertical (even if shield is held) = 53
-        if (directions.vertical) {
-            outputs.leftStickY = 128 + (directions.y * 53);
-            // MY Vertical Tilts
-            if (inputs.a) {
-                outputs.leftStickY = 128 + (directions.y * 36);
-            }
-        }
-        if (directions.diagonal) {
-            // MY + q1/2/3/4 = 35 59
-            outputs.leftStickX = 128 + (directions.x * 35);
-            outputs.leftStickY = 128 + (directions.y * 53);
-            if (shield_button_pressed) {
-                // MY + L, R, LS, and MS + q1/2 = 38 70
-                outputs.leftStickX = 128 + (directions.x * 38);
-                outputs.leftStickY = 128 + (directions.y * 70);
-                // MY + L, R, LS, and MS + q3/4 = 40 68
-                if (directions.x == -1) {
-                    outputs.leftStickX = 128 + (directions.x * 40);
-                    outputs.leftStickY = 128 + (directions.y * 68);
-                }
-            }
+        } 
+        // outputs.leftStickY = ANALOG_STICK_NEUTRAL - 26;
+
+        // if (directions.vertical) {
+        //     outputs.leftStickY = ANALOG_STICK_NEUTRAL + (directions.y * 27);
+        // }
+    }
+
+    if (inputs.mode_old) {
+        outputs.leftStickX = ANALOG_STICK_NEUTRAL;
+
+        if (directions.horizontal) {
+            outputs.leftStickX = ANALOG_STICK_NEUTRAL + (directions.x * 1);
         }
 
-        /* Up B angles */
-        if (directions.diagonal && !shield_button_pressed) {
-            // (56.56) = 35 53
-            outputs.leftStickX = 128 + (directions.x * 35);
-            outputs.leftStickY = 128 + (directions.y * 53);
-            // (50.95) = 43 53
-            if (inputs.c_down) {
-                outputs.leftStickX = 128 + (directions.x * 43);
-                outputs.leftStickY = 128 + (directions.y * 53);
-            }
-            // (53.65) = 39 53
-            if (inputs.c_left) {
-                outputs.leftStickX = 128 + (directions.x * 49);
-                outputs.leftStickY = 128 + (directions.y * 53);
-            }
-            // (59.68) = 31 53
-            if (inputs.c_up) {
-                outputs.leftStickX = 128 + (directions.x * 31);
-                outputs.leftStickY = 128 + (directions.y * 53);
-            }
-            // (62.15) = 28 53
-            if (inputs.c_right) {
-                outputs.leftStickX = 128 + (directions.x * 28);
-                outputs.leftStickY = 128 + (directions.y * 53);
-            }
+        outputs.leftStickY = ANALOG_STICK_NEUTRAL - 70;
 
-            /* Extended Up B Angles */
-            if (inputs.b) {
-                // (56.71) = 44 67
-                outputs.leftStickX = 128 + (directions.x * 44);
-                outputs.leftStickY = 128 + (directions.y * 67);
-                // (50.62) = 55 67
-                if (inputs.c_down) {
-                    outputs.leftStickX = 128 + (directions.x * 55);
-                    outputs.leftStickY = 128 + (directions.y * 67);
-                }
-                // (53.82) = 49 67
-                if (inputs.c_left) {
-                    outputs.leftStickX = 128 + (directions.x * 49);
-                    outputs.leftStickY = 128 + (directions.y * 67);
-                }
-                // (59.8) = 39 67
-                if (inputs.c_up) {
-                    outputs.leftStickX = 128 + (directions.x * 39);
-                    outputs.leftStickY = 128 + (directions.y * 67);
-                }
-                // (62.42) = 35 67
-                if (inputs.c_right) {
-                    outputs.leftStickX = 128 + (directions.x * 35);
-                    outputs.leftStickY = 128 + (directions.y * 67);
-                }
-            }
-
-            // MY Pivot Uptilt/Dtilt
-            if (inputs.a) {
-                outputs.leftStickX = 128 + (directions.x * 34);
-                outputs.leftStickY = 128 + (directions.y * 38);
-            }
+        if (inputs.tilt_3 && directions.horizontal) {
+            outputs.leftStickX = ANALOG_STICK_NEUTRAL + (directions.x * 60);
         }
     }
+
+    // if (inputs.tilt_2) {
+    //     if (directions.horizontal) {
+    //         outputs.leftStickX = ANALOG_STICK_NEUTRAL + (directions.x * 50);
+    //     }
+
+    //     if (directions.vertical) {
+    //         outputs.leftStickY = ANALOG_STICK_NEUTRAL + (directions.x * 50);
+    //     }
+    // }
+
+    // if (inputs.tilt_3) {
+    //     if (directions.horizontal) {
+    //         outputs.leftStickX = ANALOG_STICK_NEUTRAL + (directions.x *100);
+    //     }
+    //     outputs.leftStickY = ANALOG_STICK_MIN;
+    // }
+
+    // if (inputs.mode_old) {
+    //     outputs.leftStickY = ANALOG_STICK_NEUTRAL;
+    //     if (directions.horizontal) {
+    //         outputs.leftStickX = ANALOG_STICK_NEUTRAL + (directions.x * 73);
+    //     }
+    //     // outputs.leftStickY = ANALOG_STICK_MIN;
+    // }
+
+    
+
+    // if (inputs.tilt_3 && inputs.mode_old) {
+    //     outputs.leftStickX = ANALOG_STICK_NEUTRAL;
+    //     outputs.leftStickY = ANALOG_STICK_NEUTRAL;
+    // }
+
+    // if both x and y pressed = diagonal
+    // if (inputs.mode_old && inputs.tilt_3) {
+    //     if (directions.horizontal) {
+    //         outputs.leftStickX = ANALOG_STICK_NEUTRAL + (directions.x * 50);
+    //     }
+    // }
+    // else
+    // {
+    //     // if modx = all clean
+    //     if (inputs.tilt_3) {
+    //         outputs.leftStickX = ANALOG_STICK_NEUTRAL;
+    //         outputs.leftStickY = ANALOG_STICK_NEUTRAL;
+    //     }
+
+    //     // if mody = down input socd clean
+    //     if (inputs.mode_old) {
+    //         outputs.leftStickX = ANALOG_STICK_NEUTRAL;
+    //         outputs.leftStickY = ANALOG_STICK_NEUTRAL - 50;
+    //     }
+    // }
+    
+
+
+    // if (inputs.mode_old) {
+    //     outputs.leftStickX = ANALOG_STICK_NEUTRAL;
+    //     outputs.leftStickY = ANALOG_STICK_NEUTRAL; // - 50;
+    // }
+
+    // if (inputs.tilt_3) {
+    //     // MX + Horizontal = 6625 = 53
+    //     if (directions.horizontal) {
+    //         outputs.leftStickX = ANALOG_STICK_NEUTRAL + (directions.x * 30);
+    //         // outputs.leftStickY = ANALOG_STICK_NEUTRAL;
+    //         // Horizontal Shield tilt = 51
+    //         if (shield_button_pressed) {
+    //             outputs.leftStickX = 128 + (directions.x * 51);
+    //         }
+    //         // Horizontal Tilts = 36
+    //         if (inputs.a) {
+    //             outputs.leftStickX = 128 + (directions.x * 36);
+    //         }
+
+    //         outputs.leftStickY = ANALOG_STICK_NEUTRAL - 55;
+    //         // outputs.leftStickY = ANALOG_STICK_NEUTRAL - 25;
+    //     }
+    //     // MX + Vertical = 44
+    //     if (directions.vertical) {
+    //         outputs.leftStickY = ANALOG_STICK_NEUTRAL + (directions.y * 50);
+    //         // Vertical Shield Tilt = 51
+    //         if (shield_button_pressed) {
+    //             outputs.leftStickY = 128 + (directions.y * 51);
+    //         }
+    //     }
+    //     if (directions.diagonal) {
+    //         // MX + q1/2/3/4 = 53 35
+    //         outputs.leftStickX = 128 + (directions.x * 53);
+    //         outputs.leftStickY = 128 + (directions.y * 35);
+    //         if (shield_button_pressed) {
+    //             // MX + L, R, LS, and MS + q1/2/3/4 = 6375 3750 = 51 30
+    //             outputs.leftStickX = 128 + (directions.x * 51);
+    //             outputs.leftStickY = 128 + (directions.y * 30);
+    //         }
+    //     }
+
+    //     // Angled fsmash/ftilt with C-Stick + MX
+    //     if (directions.cx != 0) {
+    //         outputs.rightStickX = 128 + (directions.cx * 127);
+    //         outputs.rightStickY = 128 + (directions.y * 59);
+    //     }
+
+    //     /* Up B angles */
+    //     if (directions.diagonal && !shield_button_pressed) {
+    //         // (33.44) = 53 35
+    //         outputs.leftStickX = 128 + (directions.x * 53);
+    //         outputs.leftStickY = 128 + (directions.y * 35);
+    //         // (39.05) = 53 43
+    //         if (inputs.c_down) {
+    //             outputs.leftStickX = 128 + (directions.x * 53);
+    //             outputs.leftStickY = 128 + (directions.y * 43);
+    //         }
+    //         // (36.35) = 53 39
+    //         if (inputs.c_left) {
+    //             outputs.leftStickX = 128 + (directions.x * 53);
+    //             outputs.leftStickY = 128 + (directions.y * 39);
+    //         }
+    //         // (30.32) = 56 41
+    //         if (inputs.c_up) {
+    //             outputs.leftStickX = 128 + (directions.x * 53);
+    //             outputs.leftStickY = 128 + (directions.y * 31);
+    //         }
+    //         // (27.85) = 49 42
+    //         if (inputs.c_right) {
+    //             outputs.leftStickX = 128 + (directions.x * 53);
+    //             outputs.leftStickY = 128 + (directions.y * 28);
+    //         }
+
+    //         /* Extended Up B Angles */
+    //         if (inputs.b) {
+    //             // (33.29) = 67 44
+    //             outputs.leftStickX = 128 + (directions.x * 67);
+    //             outputs.leftStickY = 128 + (directions.y * 44);
+    //             // (39.38) = 67 55
+    //             if (inputs.c_down) {
+    //                 outputs.leftStickX = 128 + (directions.x * 67);
+    //                 outputs.leftStickY = 128 + (directions.y * 55);
+    //             }
+    //             // (36.18) = 67 49
+    //             if (inputs.c_left) {
+    //                 outputs.leftStickX = 128 + (directions.x * 67);
+    //                 outputs.leftStickY = 128 + (directions.y * 49);
+    //             }
+    //             // (30.2) = 67 39
+    //             if (inputs.c_up) {
+    //                 outputs.leftStickX = 128 + (directions.x * 67);
+    //                 outputs.leftStickY = 128 + (directions.y * 39);
+    //             }
+    //             // (27.58) = 67 35
+    //             if (inputs.c_right) {
+    //                 outputs.leftStickX = 128 + (directions.x * 67);
+    //                 outputs.leftStickY = 128 + (directions.y * 35);
+    //             }
+    //         }
+
+    //         // Angled Ftilts
+    //         if (inputs.a) {
+    //             outputs.leftStickX = 128 + (directions.x * 36);
+    //             outputs.leftStickY = 128 + (directions.y * 26);
+    //         }
+    //     }
+    // }
+
+    
+
+    // if (inputs.mode_old) {
+    //     outputs.leftStickX = ANALOG_STICK_NEUTRAL;
+    //     outputs.leftStickY = ANALOG_STICK_NEUTRAL;
+    //     if (inputs.tilt_3) {
+    //         if (directions.horizontal) {
+    //             outputs.leftStickX = 128 + (directions.x * 80);
+    //         }
+    //     }
+    // }
+
+    // if (inputs.mode_old) {
+    //     // MY + Horizontal (even if shield is held) = 41
+
+    //     outputs.leftStickX = ANALOG_STICK_NEUTRAL;
+    //     outputs.leftStickY = ANALOG_STICK_NEUTRAL - 50;
+        // if (inputs.tilt_3) {
+        //     if (directions.horizontal) {
+        //         outputs.leftStickX = 128 + (directions.x * 80);
+        //     }
+        // }
+
+
+
+        // if (directions.horizontal) {
+        //     // outputs.leftStickX = 128 + (directions.x * 41);
+        //     // // MY Horizontal Tilts
+        //     // if (inputs.a) {
+        //     //     outputs.leftStickX = 128 + (directions.x * 36);
+        //     // }
+        //     if (inputs.tilt_3) {
+        //         outputs.leftStickX = 128 + (directions.x*59);
+        //     }
+        //     // outputs.leftStickY = 128 - 59;
+        // }
+        // // MY + Vertical (even if shield is held) = 53
+        // if (directions.vertical) {
+        //     outputs.leftStickY = 128 + (directions.y * 53);
+        //     // MY Vertical Tilts
+        //     if (inputs.a) {
+        //         outputs.leftStickY = 128 + (directions.y * 36);
+        //     }
+        // }
+        // if (directions.diagonal) {
+        //     // MY + q1/2/3/4 = 35 59
+        //     outputs.leftStickX = 128 + (directions.x * 35);
+        //     outputs.leftStickY = 128 + (directions.y * 53);
+        //     if (shield_button_pressed) {
+        //         // MY + L, R, LS, and MS + q1/2 = 38 70
+        //         outputs.leftStickX = 128 + (directions.x * 38);
+        //         outputs.leftStickY = 128 + (directions.y * 70);
+        //         // MY + L, R, LS, and MS + q3/4 = 40 68
+        //         if (directions.x == -1) {
+        //             outputs.leftStickX = 128 + (directions.x * 40);
+        //             outputs.leftStickY = 128 + (directions.y * 68);
+        //         }
+        //     }
+        // }
+
+        // /* Up B angles */
+        // if (directions.diagonal && !shield_button_pressed) {
+        //     // (56.56) = 35 53
+        //     outputs.leftStickX = 128 + (directions.x * 35);
+        //     outputs.leftStickY = 128 + (directions.y * 53);
+        //     // (50.95) = 43 53
+        //     if (inputs.c_down) {
+        //         outputs.leftStickX = 128 + (directions.x * 43);
+        //         outputs.leftStickY = 128 + (directions.y * 53);
+        //     }
+        //     // (53.65) = 39 53
+        //     if (inputs.c_left) {
+        //         outputs.leftStickX = 128 + (directions.x * 49);
+        //         outputs.leftStickY = 128 + (directions.y * 53);
+        //     }
+        //     // (59.68) = 31 53
+        //     if (inputs.c_up) {
+        //         outputs.leftStickX = 128 + (directions.x * 31);
+        //         outputs.leftStickY = 128 + (directions.y * 53);
+        //     }
+        //     // (62.15) = 28 53
+        //     if (inputs.c_right) {
+        //         outputs.leftStickX = 128 + (directions.x * 28);
+        //         outputs.leftStickY = 128 + (directions.y * 53);
+        //     }
+
+        //     /* Extended Up B Angles */
+        //     if (inputs.b) {
+        //         // (56.71) = 44 67
+        //         outputs.leftStickX = 128 + (directions.x * 44);
+        //         outputs.leftStickY = 128 + (directions.y * 67);
+        //         // (50.62) = 55 67
+        //         if (inputs.c_down) {
+        //             outputs.leftStickX = 128 + (directions.x * 55);
+        //             outputs.leftStickY = 128 + (directions.y * 67);
+        //         }
+        //         // (53.82) = 49 67
+        //         if (inputs.c_left) {
+        //             outputs.leftStickX = 128 + (directions.x * 49);
+        //             outputs.leftStickY = 128 + (directions.y * 67);
+        //         }
+        //         // (59.8) = 39 67
+        //         if (inputs.c_up) {
+        //             outputs.leftStickX = 128 + (directions.x * 39);
+        //             outputs.leftStickY = 128 + (directions.y * 67);
+        //         }
+        //         // (62.42) = 35 67
+        //         if (inputs.c_right) {
+        //             outputs.leftStickX = 128 + (directions.x * 35);
+        //             outputs.leftStickY = 128 + (directions.y * 67);
+        //         }
+        //     }
+
+        //     // MY Pivot Uptilt/Dtilt
+        //     if (inputs.a) {
+        //         outputs.leftStickX = 128 + (directions.x * 34);
+        //         outputs.leftStickY = 128 + (directions.y * 38);
+        //     }
+        // }
+    // }
 
     // C-stick ASDI Slideoff angle overrides any other C-stick modifiers (such as
     // angled fsmash).
@@ -266,14 +398,14 @@ void Ultimate::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs) {
     }
 
     // Shut off C-stick when using D-Pad layer.
-    if ((inputs.mod_x && inputs.mod_y) || inputs.nunchuk_c) {
+    if ((inputs.tilt_3 && inputs.mode_old) || inputs.nunchuk_c) {
         outputs.rightStickX = 128;
         outputs.rightStickY = 128;
     }
 
     // Nunchuk overrides left stick.
-    if (inputs.nunchuk_connected) {
-        outputs.leftStickX = inputs.nunchuk_x;
-        outputs.leftStickY = inputs.nunchuk_y;
-    }
+    // if (inputs.nunchuk_connected) {
+    //     outputs.leftStickX = inputs.nunchuk_x;
+    //     outputs.leftStickY = inputs.nunchuk_y;
+    // }
 }

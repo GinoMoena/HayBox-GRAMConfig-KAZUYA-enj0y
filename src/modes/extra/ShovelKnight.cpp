@@ -8,7 +8,7 @@ ShovelKnight::ShovelKnight(socd::SocdType socd_type) {
     _socd_pair_count = 4;
     _socd_pairs = new socd::SocdPair[_socd_pair_count]{
         socd::SocdPair{&InputState::left,    &InputState::right,   socd_type},
-        socd::SocdPair{ &InputState::down,   &InputState::mod_x,   socd_type},
+        socd::SocdPair{ &InputState::down,   &InputState::tilt_3,   socd_type},
         socd::SocdPair{ &InputState::c_left, &InputState::c_right, socd_type},
         socd::SocdPair{ &InputState::c_down, &InputState::c_up,    socd_type},
     };
@@ -18,7 +18,7 @@ void ShovelKnight::UpdateDigitalOutputs(InputState &inputs, OutputState &outputs
     outputs.dpadLeft = inputs.left;
     outputs.dpadRight = inputs.right;
     outputs.dpadDown = inputs.down;
-    outputs.dpadUp = inputs.mod_x;
+    outputs.dpadUp = inputs.tilt_3;
 
     outputs.b = inputs.x; // Jump
     outputs.a = inputs.a; // Attack
@@ -36,7 +36,7 @@ void ShovelKnight::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs)
         inputs.left,
         inputs.right,
         inputs.down,
-        inputs.mod_x,
+        inputs.tilt_3,
         inputs.c_left,
         inputs.c_right,
         inputs.c_down,

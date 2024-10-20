@@ -26,8 +26,9 @@ typedef struct inputstate {
     bool select = false;
     bool start = false;
     bool home = false;
-    bool mod_x = false;
-    bool mod_y = false;
+    bool tilt_3 = false;
+    bool mode_old = false;
+    bool tilt_2 = false;
 
     // Nunchuk inputs.
     bool nunchuk_connected = false;

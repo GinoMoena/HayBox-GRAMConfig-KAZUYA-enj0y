@@ -37,7 +37,7 @@ void RivalsOfAether::UpdateDigitalOutputs(InputState &inputs, OutputState &outpu
     outputs.rightStickClick = inputs.midshield;
 
     // Activate D-Pad layer by holding Mod X + Mod Y.
-    if (inputs.mod_x && inputs.mod_y) {
+    if (inputs.tilt_3 && inputs.mode_old) {
         outputs.dpadUp = inputs.c_up;
         outputs.dpadDown = inputs.c_down;
         outputs.dpadLeft = inputs.c_left;
@@ -67,7 +67,7 @@ void RivalsOfAether::UpdateAnalogOutputs(InputState &inputs, OutputState &output
 
     // 48 total DI angles, 24 total Up b angles, 16 total airdodge angles
 
-    if (inputs.mod_x) {
+    if (inputs.tilt_3) {
         if (directions.horizontal) {
             outputs.leftStickX = 128 + (directions.x * 66);
             // MX Horizontal Tilts
@@ -113,7 +113,7 @@ void RivalsOfAether::UpdateAnalogOutputs(InputState &inputs, OutputState &output
         }
     }
 
-    if (inputs.mod_y) {
+    if (inputs.mode_old) {
         if (directions.horizontal) {
             outputs.leftStickX = 128 + (directions.x * 44);
         }
@@ -152,7 +152,7 @@ void RivalsOfAether::UpdateAnalogOutputs(InputState &inputs, OutputState &output
     }
 
     // Shut off C-stick when using D-Pad layer.
-    if (inputs.mod_x && inputs.mod_y) {
+    if (inputs.tilt_3 && inputs.mode_old) {
         outputs.rightStickX = 128;
         outputs.rightStickY = 128;
     }

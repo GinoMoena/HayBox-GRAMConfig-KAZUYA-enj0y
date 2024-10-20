@@ -8,7 +8,7 @@ RocketLeague::RocketLeague(socd::SocdType socd_type) {
     _socd_pair_count = 4;
     _socd_pairs = new socd::SocdPair[_socd_pair_count]{
         socd::SocdPair{&InputState::left,    &InputState::right,   socd_type               },
-        socd::SocdPair{ &InputState::down,   &InputState::mod_x,   socd::SOCD_DIR2_PRIORITY},
+        socd::SocdPair{ &InputState::down,   &InputState::tilt_3,   socd::SOCD_DIR2_PRIORITY},
         socd::SocdPair{ &InputState::c_left, &InputState::c_right, socd_type               },
         socd::SocdPair{ &InputState::c_down, &InputState::c_up,    socd_type               },
     };
@@ -33,13 +33,13 @@ void RocketLeague::UpdateDigitalOutputs(InputState &inputs, OutputState &outputs
     }
 
     // MX + Start = Select
-    if (inputs.mod_x)
+    if (inputs.tilt_3)
         outputs.select = inputs.start;
     else
         outputs.start = inputs.start;
 
     // D-Pad
-    if (inputs.mod_x && inputs.mod_y) {
+    if (inputs.tilt_3 && inputs.mode_old) {
         outputs.dpadUp = inputs.c_up;
         outputs.dpadDown = inputs.c_down;
         outputs.dpadLeft = inputs.c_left;
@@ -53,7 +53,7 @@ void RocketLeague::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs)
         inputs.left,
         inputs.right,
         inputs.down,
-        inputs.mod_x,
+        inputs.tilt_3,
         inputs.c_left,
         inputs.c_right,
         inputs.c_down,
@@ -64,7 +64,7 @@ void RocketLeague::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs)
         outputs
     );
 
-    if (inputs.mod_y) {
+    if (inputs.mode_old) {
         if (directions.diagonal) {
             outputs.leftStickX = ANALOG_STICK_NEUTRAL + (directions.x * 70);
             // outputs.leftStickY =
@@ -80,7 +80,7 @@ void RocketLeague::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs)
     }
 
     // Shut off right stick when using dpad layer.
-    if (inputs.mod_x && inputs.mod_y) {
+    if (inputs.tilt_3 && inputs.mode_old) {
         outputs.rightStickX = ANALOG_STICK_NEUTRAL;
         outputs.rightStickY = ANALOG_STICK_NEUTRAL;
     }

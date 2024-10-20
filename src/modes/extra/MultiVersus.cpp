@@ -19,10 +19,10 @@ void MultiVersus::UpdateDigitalOutputs(InputState &inputs, OutputState &outputs)
     outputs.x = inputs.x;
     outputs.y = inputs.y;
 
-    outputs.start = !inputs.mod_y && inputs.start;
+    outputs.start = !inputs.mode_old && inputs.start;
 
     // Select, MS, or MY + Start for "Reset" in the Lab. Not supported by GameCube adapter.
-    outputs.select = inputs.select || inputs.midshield || (inputs.mod_y && inputs.start);
+    outputs.select = inputs.select || inputs.midshield || (inputs.mode_old && inputs.start);
 
     // Home not supported by GameCube adapter.
     outputs.home = inputs.home;
@@ -37,7 +37,7 @@ void MultiVersus::UpdateDigitalOutputs(InputState &inputs, OutputState &outputs)
     // R = RT. Can be bound to "pickup item" or left unbound.
     outputs.triggerRDigital = inputs.r;
 
-    if (!inputs.mod_x) {
+    if (!inputs.tilt_3) {
         // Bind A to "attack" in-game.
         outputs.a = inputs.a;
 
@@ -52,7 +52,7 @@ void MultiVersus::UpdateDigitalOutputs(InputState &inputs, OutputState &outputs)
     }
 
     // MX activates a layer for "neutral" binds. Uses D-Pad buttons.
-    if (inputs.mod_x && !inputs.mod_y) {
+    if (inputs.tilt_3 && !inputs.mode_old) {
         // MX + A = D-Pad Left. Bind to "neutral attack" in-game.
         outputs.dpadLeft = inputs.a;
 
@@ -67,7 +67,7 @@ void MultiVersus::UpdateDigitalOutputs(InputState &inputs, OutputState &outputs)
     }
 
     // MY activates C-Stick to D-Pad conversion.
-    if (inputs.mod_y && !inputs.mod_x) {
+    if (inputs.mode_old && !inputs.tilt_3) {
         outputs.dpadLeft = inputs.c_left;
         outputs.dpadRight = inputs.c_right;
         outputs.dpadDown = inputs.c_down;
@@ -92,7 +92,7 @@ void MultiVersus::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs) 
         outputs
     );
 
-    if (inputs.mod_y && !inputs.mod_x) {
+    if (inputs.mode_old && !inputs.tilt_3) {
         // MY slows down the cursor for easier menu navigation.
         // Menu cursor speed can also be turned down in-game under "Interface" settings.
         // 128 ± 76 results in the slowest cursor that still actuates directional inputs in-game.

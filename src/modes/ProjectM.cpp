@@ -28,7 +28,7 @@ void ProjectM::UpdateDigitalOutputs(InputState &inputs, OutputState &outputs) {
     outputs.x = inputs.x;
     outputs.y = inputs.y;
     // True Z press vs macro lightshield + A.
-    if (_options.true_z_press || inputs.mod_x) {
+    if (_options.true_z_press || inputs.tilt_3) {
         outputs.buttonR = inputs.z;
     } else {
         outputs.a = inputs.a || inputs.z;
@@ -42,7 +42,7 @@ void ProjectM::UpdateDigitalOutputs(InputState &inputs, OutputState &outputs) {
     outputs.start = inputs.start;
 
     // Activate D-Pad layer by holding Mod X + Mod Y or Nunchuk C button.
-    if ((inputs.mod_x && inputs.mod_y) || inputs.nunchuk_c) {
+    if ((inputs.tilt_3 && inputs.mode_old) || inputs.nunchuk_c) {
         outputs.dpadUp = inputs.c_up;
         outputs.dpadDown = inputs.c_down;
         outputs.dpadLeft = inputs.c_left;
@@ -84,7 +84,7 @@ void ProjectM::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs) {
         }
     }
 
-    if (inputs.mod_x) {
+    if (inputs.tilt_3) {
         if (directions.horizontal) {
             outputs.leftStickX = 128 + (directions.x * 70);
         }
@@ -133,7 +133,7 @@ void ProjectM::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs) {
         }
     }
 
-    if (inputs.mod_y) {
+    if (inputs.mode_old) {
         if (directions.horizontal) {
             outputs.leftStickX = 128 + (directions.x * 35);
         }
@@ -199,7 +199,7 @@ void ProjectM::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs) {
     }
 
     // Send lightshield input if we are using Z = lightshield + A macro.
-    if (inputs.z && !(inputs.mod_x || _options.true_z_press)) {
+    if (inputs.z && !(inputs.tilt_3 || _options.true_z_press)) {
         outputs.triggerRAnalog = 49;
     }
 
@@ -212,7 +212,7 @@ void ProjectM::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs) {
     }
 
     // Shut off C-stick when using D-Pad layer.
-    if ((inputs.mod_x && inputs.mod_y) || inputs.nunchuk_c) {
+    if ((inputs.tilt_3 && inputs.mode_old) || inputs.nunchuk_c) {
         outputs.rightStickX = 128;
         outputs.rightStickY = 128;
     }

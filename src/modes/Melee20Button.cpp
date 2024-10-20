@@ -37,7 +37,7 @@ void Melee20Button::UpdateDigitalOutputs(InputState &inputs, OutputState &output
     outputs.start = inputs.start;
 
     // Activate D-Pad layer by holding Mod X + Mod Y or Nunchuk C button.
-    if ((inputs.mod_x && inputs.mod_y) || inputs.nunchuk_c) {
+    if ((inputs.tilt_3 && inputs.mode_old) || inputs.nunchuk_c) {
         outputs.dpadUp = inputs.c_up;
         outputs.dpadDown = inputs.c_down;
         outputs.dpadLeft = inputs.c_left;
@@ -81,7 +81,7 @@ void Melee20Button::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs
         }
     }
 
-    if (inputs.mod_x) {
+    if (inputs.tilt_3) {
         // MX + Horizontal (even if shield is held) = 6625 = 53
         if (directions.horizontal) {
             outputs.leftStickX = 128 + (directions.x * 53);
@@ -158,7 +158,7 @@ void Melee20Button::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs
         }
     }
 
-    if (inputs.mod_y) {
+    if (inputs.mode_old) {
         // MY + Horizontal (even if shield is held) = 3375 = 27
         if (directions.horizontal) {
             outputs.leftStickX = 128 + (directions.x * 27);
@@ -267,7 +267,7 @@ void Melee20Button::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs
     }
 
     // Shut off C-stick when using D-Pad layer.
-    if ((inputs.mod_x && inputs.mod_y) || inputs.nunchuk_c) {
+    if ((inputs.tilt_3 && inputs.mode_old) || inputs.nunchuk_c) {
         outputs.rightStickX = 128;
         outputs.rightStickY = 128;
     }
