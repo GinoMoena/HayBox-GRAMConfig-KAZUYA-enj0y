@@ -36,6 +36,14 @@ void Ultimate::UpdateDigitalOutputs(InputState &inputs, OutputState &outputs) {
         outputs.dpadLeft = inputs.c_left;
         outputs.dpadRight = inputs.c_right;
     }
+
+    // taunts
+    if (inputs.mod_taunt) {
+        outputs.dpadUp = inputs.c_up;
+        outputs.dpadDown = inputs.c_down;
+        outputs.dpadLeft = inputs.c_left;
+        outputs.dpadRight = inputs.c_right;
+    }
 }
 
 void Ultimate::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs) {
@@ -60,11 +68,11 @@ void Ultimate::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs) {
 
     if (inputs.tilt_2) {
         if (directions.horizontal) {
-            outputs.leftStickX = ANALOG_STICK_NEUTRAL + (directions.x * 45);
+            outputs.leftStickX = ANALOG_STICK_NEUTRAL + (directions.x * 50);
         }
 
         if (directions.vertical) {
-            outputs.leftStickY = ANALOG_STICK_NEUTRAL + (directions.y * 45);
+            outputs.leftStickY = ANALOG_STICK_NEUTRAL + (directions.y * 50);
         }
     }
 
@@ -76,11 +84,6 @@ void Ultimate::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs) {
                 outputs.leftStickX ++;
             }
         } 
-        // outputs.leftStickY = ANALOG_STICK_NEUTRAL - 26;
-
-        // if (directions.vertical) {
-        //     outputs.leftStickY = ANALOG_STICK_NEUTRAL + (directions.y * 27);
-        // }
     }
 
     if (inputs.mode_old) {
