@@ -28,10 +28,10 @@ GpioButtonMapping button_mappings[] = {
     { &InputState::left,        4 },
     { &InputState::down,        3 },
     { &InputState::right,       2 },
-    { &InputState::up,          1},
+    { &InputState::up,          17 },
 
-    { &InputState::l,           6},
-    { &InputState::midshield, 7},
+    { &InputState::l,           6 },
+    { &InputState::r,           7 },
 
     { &InputState::select,      10},
     { &InputState::start,       0 },
@@ -39,18 +39,18 @@ GpioButtonMapping button_mappings[] = {
 
     { &InputState::c_left,      13},
     { &InputState::c_up,        12},
-    { &InputState::c_down,      15},
     { &InputState::c_right,     16},
-    { &InputState::lightshield, 14},
+    { &InputState::c_down,      15}, // 14 no es nada?
+    // { &InputState::lightshield, 15}, // no existe
 
-    { &InputState::a,           26},
-    { &InputState::tilt_3,       21 },
-    { &InputState::mode_old,       19 },
-    { &InputState::r,           17},
+    { &InputState::a,           14},
+    { &InputState::tilt_3,      26 },
+    { &InputState::mode_old,    21 },
+    // { &InputState::r,           19},
 
-    { &InputState::b,           27 },
-    { &InputState::y,           22 },
-    { &InputState::z,           20 },
+    { &InputState::b,           22 },
+    { &InputState::y,           27 },
+    { &InputState::z,           19 },
     { &InputState::x,           18 },
 
     
