@@ -48,6 +48,12 @@ void Ultimate::UpdateDigitalOutputs(InputState &inputs, OutputState &outputs) {
 
 void Ultimate::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs) {
     // Coordinate calculations to make modifier handling simpler.
+    
+    // feature/up total priority: clean down with up
+    if (inputs.up) {
+        inputs.down = false;
+    }
+
     UpdateDirections(
         inputs.left,
         inputs.right,
@@ -64,6 +70,11 @@ void Ultimate::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs) {
     );
 
     bool shield_button_pressed = inputs.l || inputs.r;
+
+    // if up pressed make a 30 degree angle for upb priority
+    if (inputs.up) {
+        outputs.leftStickX = ANALOG_STICK_NEUTRAL + (directions.x * 55);
+    }
 
 
     if (inputs.tilt_2) {
