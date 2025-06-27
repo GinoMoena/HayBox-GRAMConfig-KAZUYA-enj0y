@@ -23,6 +23,7 @@ void InputMode::HandleSocd(InputState &inputs) {
     // Handle SOCD resolution for each SOCD button pair.
     for (size_t i = 0; i < _socd_pair_count; i++) {
         socd::SocdPair pair = _socd_pairs[i];
+        
         switch (pair.socd_type) {
             case socd::SOCD_NEUTRAL:
                 socd::neutral(inputs.*(pair.input_dir1), inputs.*(pair.input_dir2));
@@ -46,6 +47,9 @@ void InputMode::HandleSocd(InputState &inputs) {
                 break;
             case socd::SOCD_DIR2_PRIORITY:
                 socd::dir1_priority(inputs.*(pair.input_dir2), inputs.*(pair.input_dir1));
+                break;
+            case socd::SOCD_ALWAYS_UP:
+                socd::always_up(inputs.*(pair.input_dir1), inputs.*(pair.input_dir2));
                 break;
             case socd::SOCD_NONE:
                 break;

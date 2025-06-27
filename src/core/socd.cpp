@@ -82,3 +82,8 @@ void socd::dir1_priority(bool &input_dir1, bool &input_dir2) {
         input_dir2 = false;
     }
 }
+void socd::always_up(bool &input_dir1, bool &input_dir2) { 
+    if (input_dir2) {
+        input_dir1 = false;
+    }
+}

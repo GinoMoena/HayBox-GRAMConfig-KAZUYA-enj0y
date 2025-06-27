@@ -9,7 +9,7 @@ Ultimate::Ultimate(socd::SocdType socd_type) {
     _socd_pair_count = 4;
     _socd_pairs = new socd::SocdPair[_socd_pair_count]{
         socd::SocdPair{&InputState::left,    &InputState::right,   socd_type},
-        socd::SocdPair{ &InputState::down,   &InputState::up,      socd_type},
+        socd::SocdPair{ &InputState::down,   &InputState::up,      socd::SOCD_ALWAYS_UP},
         socd::SocdPair{ &InputState::c_left, &InputState::c_right, socd_type},
         socd::SocdPair{ &InputState::c_down, &InputState::c_up,    socd_type},
         // socd::SocdPair{ &InputState::mode_old, &InputState::tilt_3, socd_type}
@@ -49,11 +49,6 @@ void Ultimate::UpdateDigitalOutputs(InputState &inputs, OutputState &outputs) {
 void Ultimate::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs) {
     // Coordinate calculations to make modifier handling simpler.
     
-    // feature/up total priority: clean down with up
-    if (inputs.up) {
-        inputs.down = false;
-    }
-
     UpdateDirections(
         inputs.left,
         inputs.right,
@@ -73,7 +68,7 @@ void Ultimate::UpdateAnalogOutputs(InputState &inputs, OutputState &outputs) {
 
     // if up pressed make a 30 degree angle for upb priority
     if (inputs.up) {
-        outputs.leftStickX = ANALOG_STICK_NEUTRAL + (directions.x * 55);
+       outputs.leftStickX = ANALOG_STICK_NEUTRAL + (directions.x * 99);
     }
 
 

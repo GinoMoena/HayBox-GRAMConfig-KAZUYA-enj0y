@@ -12,6 +12,7 @@ namespace socd {
         SOCD_DIR1_PRIORITY,
         SOCD_DIR2_PRIORITY,
         SOCD_NONE,
+        SOCD_ALWAYS_UP
     } SocdType;
 
     typedef struct {
@@ -38,6 +39,8 @@ namespace socd {
     void neutral(bool &input_dir1, bool &input_dir2);
 
     void dir1_priority(bool &input_dir1, bool &input_dir2);
+
+    void always_up(bool &input_dir1, bool &input_dir2);
 }
 
 #endif
